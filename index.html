@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>大学生网络心理与社交媒体使用状况调查（互动版）</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f3f5f8;color:#24292f;line-height:1.6}
+#app{max-width:620px;margin:0 auto;padding:0 14px 100px}
+.top{position:sticky;top:0;z-index:9;background:#f3f5f8;padding:10px 0 6px}
+h1{font-size:17px;margin:0 0 8px}
+.pbar{height:8px;background:#e2e7ee;border-radius:4px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3b82f6,#6366f1);transition:width .3s}
+.ptxt{font-size:12px;color:#6a737d;margin-top:4px}
+.card{background:#fff;border-radius:14px;padding:16px 14px;margin-top:12px;box-shadow:0 1px 5px rgba(0,0,0,.05)}
+.intro{font-size:13.5px;color:#57606a}
+.q{margin:18px 0 6px;font-weight:600}
+.sub{font-size:12px;color:#8a94a0;font-weight:400}
+.opt{display:flex;align-items:center;border:1.5px solid #e4e8ee;border-radius:10px;padding:11px 12px;margin:7px 0;cursor:pointer;background:#fff;font-size:14.5px}
+.opt .dot{width:18px;height:18px;border:2px solid #b6bfc9;border-radius:50%;margin-right:10px;flex:none}
+.opt.sel{border-color:#3b82f6;background:#eef5ff}
+.opt.sel .dot{border-color:#3b82f6;background:#3b82f6}
+.opt.sel .dot::after{content:"✓";color:#fff;font-size:12px;line-height:15px;text-align:center;display:block}
+.opt input{display:none}
+.opt.miss{border-color:#ef4444;background:#fff5f5}
+.lk{display:flex;gap:5px;margin:8px 0 2px}
+.lk label{flex:1;border:1.5px solid #e4e8ee;border-radius:9px;text-align:center;font-size:11.5px;padding:9px 2px;cursor:pointer;background:#fff;line-height:1.35}
+.lk label.sel{border-color:#3b82f6;background:#3b82f6;color:#fff;font-weight:600}
+.lk label.miss{border-color:#ef4444}
+.item{margin-top:14px}
+.item p{margin:0;font-size:14.5px}
+.inum{color:#8a94a0;font-size:12px;margin-right:4px}
+.dimchip{font-size:11px;color:#6a737d;background:#f0f3f7;border-radius:20px;padding:2px 10px;display:inline-block;margin:2px 0 6px}
+textarea{width:100%;min-height:88px;border:1.5px solid #e4e8ee;border-radius:10px;padding:10px;font:inherit;font-size:14px;resize:vertical}
+textarea:focus{outline:none;border-color:#3b82f6}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -2px 10px rgba(0,0,0,.07);padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:9}
+.nav .inner{max-width:620px;margin:0 auto;display:flex;gap:10px}
+.nav button{flex:1;border:0;border-radius:12px;padding:13px 10px;font-size:15px;font-weight:600}
+.b1{background:#3b82f6;color:#fff}.b2{background:#eef1f5;color:#424a53}
+#toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:rgba(30,35,42,.92);color:#fff;font-size:13px;padding:8px 16px;border-radius:20px;z-index:99;opacity:0;transition:opacity .25s;pointer-events:none;max-width:86%;text-align:center}
+.res h2{font-size:16.5px;margin:4px 0}
+.badge{display:inline-block;font-size:13px;font-weight:600;border-radius:20px;padding:5px 14px;margin:4px 0}
+.b-low{background:#e7f7f0;color:#0e8a5f}.b-mid{background:#fef3e2;color:#b45309}.b-high{background:#fdeaea;color:#dc2626}.b-skip{background:#e8f1ff;color:#2563eb}
+.drow{margin:12px 0}
+.drow .t{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:4px}
+.sbar{height:10px;background:#edf0f4;border-radius:5px;overflow:hidden}
+.sbar i{display:block;height:100%;border-radius:5px}
+.c-low{background:#10b981}.c-mid{background:#f59e0b}.c-high{background:#ef4444}
+ul.pts{padding-left:20px;margin:6px 0}.pts li{margin:5px 0;font-size:14px}
+.note{font-size:12.5px;color:#6a737d}
+#exp{width:100%;min-height:150px;font-size:11.5px;margin-top:6px}
+.rbtns{display:flex;gap:10px;margin-top:10px}
+.rbtns button{flex:1}
+.badge2{display:inline-block;min-width:20px;height:20px;border-radius:50%;background:#c3cbd4;color:#fff;font-size:12px;line-height:20px;text-align:center;margin-right:10px;flex:none}
+.opt.sel .badge2{background:#fff;color:#3b82f6;font-weight:700}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <h1>大学生网络心理与社交媒体使用状况调查</h1>
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt" id="ptxt"></div>
+  </div>
+  <div id="stage"></div>
+</div>
+<div class="nav" id="nav"><div class="inner">
+  <button class="b2" id="bprev">上一部分</button>
+  <button class="b1" id="bnext">下一部分</button>
+</div></div>
+<div id="toast"></div>
+<script>
+var LSK='npsy_survey_v1';
+/* ===== 数据回收配置（不需要改文件）=====
+ 发放链接末尾加 ?recv=你的邮箱 即启用：例 https://你的网址/?recv=teacher@xx.edu.cn
+ 学生提交后，匿名作答 JSON 会自动发到该邮箱（首次需在邮箱里点一次激活链接）。
+ 研究端面板：打开 你的网址#admin */
+var RECV=(function(){try{var m=location.search.match(/[?&]recv=([^&]+)/);return m?decodeURIComponent(m[1]):''}catch(e){return''}})();
+var SUBMIT_URL=RECV?('https://formsubmit.co/ajax/'+RECV):'';
+var LK=['完全不符合','比较不符合','不确定','比较符合','完全符合'];
+
+var BASIC=[
+ {k:'gender',t:'radio',n:'Q1. 您的性别',o:['男','女']},
+ {k:'grade',t:'radio',n:'Q2. 您的年级',o:['大一','大二','大三','大四及以上（含大五、研究生）']},
+ {k:'major',t:'radio',n:'Q3. 您的专业类别',o:['人文社科类','经济管理类','理工类','农林类','医学类','艺术体育类','其他']},
+ {k:'origin',t:'radio',n:'Q4. 您的生源地（高考前长期居住地）',o:['城市（地级市及以上）','县镇（县城及建制镇）','农村']},
+ {k:'hours',t:'radio',n:'Q5. 您平均每天使用网络（手机、电脑等）的总时长约为',o:['1小时以内','1–2小时（含2小时）','2–4小时（含4小时）','4–6小时（含6小时）','6小时以上']},
+ {k:'plat',t:'check',max:3,n:'Q6. 您目前最常使用的社交平台是',ph:'最多选 3 项 —— 后续部分题目将根据您的选择自动定制',o:['微信','QQ','抖音/快手','小红书','微博','哔哩哔哩（B站）','知乎/豆瓣','其他']},
+ {k:'freq',t:'radio',n:'Q7. 您平时使用网络（手机、电脑等）的频率是',o:['几乎不上网（除必要事务外基本不使用）','每天偶尔登录几次','每天经常使用，但可以随时放下','几乎时刻在线，长时间不碰手机会不习惯']}
+];
+var BEH=[
+ {k:'periods',t:'check',n:'Q8. 您通常在哪些时段上网？',o:['早晨起床后半小时内','上课或自习时间','课间与午休','下午课后至晚饭前','晚饭后','睡前（22:00以后）','夜间醒来时（如起夜顺手刷手机）']},
+ {k:'devices',t:'check',n:'Q9. 您常用的上网设备有',o:['智能手机','笔记本电脑','台式电脑','平板电脑','其他联网设备（智能手表、游戏机等）']},
+ {k:'acts',t:'check',n:'Q10. 您的主要网络活动类型有',o:['即时通讯与社交（微信/QQ聊天、朋友圈等）','刷短视频（抖音、快手等）','看网络直播','玩网络游戏','看影视剧、综艺','学习、查资料、上网课','网络购物','浏览新闻资讯','创作发布内容（发动态、拍视频、发帖等）','听音乐、听书、播客','其他']},
+ {k:'rank',t:'rank',min:3,n:'Q11. 请按每周花费时间从多到少，点击下列活动进行排序',ph:'点击选项即按顺序编号，再点一次取消；至少排 3 项',o:['短视频','即时通讯与社交','网络游戏','影视剧综艺','学习查资料','网络购物','浏览资讯']},
+ {k:'toolh',t:'radio',n:'Q12. 您平均每天用于学习查资料、处理事务等"工具性用途"的上网时间约为',o:['几乎为0','1小时以内','1–2小时（含2小时）','2–4小时（含4小时）','4小时以上']},
+ {k:'funh',t:'radio',n:'Q13. 您平均每天用于刷视频、玩游戏、追剧、闲逛社交动态等"娱乐沉浸性用途"的上网时间约为',o:['几乎为0','1小时以内','1–2小时（含2小时）','2–4小时（含4小时）','4小时以上']},
+ {k:'bed',t:'radio',n:'Q14. 您平均每天熄灯躺下后继续使用手机等设备的时长约为',o:['基本不用','30分钟以内','30分钟–1小时（含1小时）','1–2小时（含2小时）','2小时以上']},
+ {k:'motive',t:'check',max:3,n:'Q15. 您上网（含刷社交媒体）的主要动机是',ph:'最多选 3 项',o:['获取信息、辅助学习','联络朋友、维系感情','放松娱乐、缓解压力','打发无聊时间','逃避现实中的压力或烦恼','记录分享自己的生活','追热点，怕跟不上大家的话题','大家都在用，不用会不合群','其他']}
+];
+var ANX=[
+ ['a1','我担心自己在社交平台上发布的内容（如动态、照片）得不到他人的认可'],
+ ['a2','在{P}发布内容后，我会反复查看有没有人点赞或评论'],
+ ['a3','我担心自己在网上发表的言论会被别人负面评价'],
+ ['a4','别人对我发布内容的点赞、评论情况会明显影响我的心情'],
+ ['a5','我不在意别人如何看待我在网上发布的内容'],
+ ['a6','在{P}上与他人互动（如评论、私聊）时，我会感到紧张不安'],
+ ['a7','网络聊天时，我担心自己说错话或语气不当'],
+ ['a8','给不太熟悉的同学或老师发消息前，我会反复斟酌措辞'],
+ ['a9','在班级群或{P}的群聊、评论区发言前，我会犹豫很久'],
+ ['a10','与陌生网友在网上交流时，我会感到拘束'],
+ ['a11','我对自己在网络上公开的个人信息（如照片、定位）感到不安全'],
+ ['a12','发布动态时，我会顾虑个人隐私暴露的问题'],
+ ['a13','我担心自己在网上的个人信息被他人滥用或传播'],
+ ['a14','出于隐私顾虑，我会设置分组可见或减少发布内容'],
+ ['a15','我觉得在社交平台上分享个人信息没什么可担心的']
+];
+var IAS=[
+ ['i1','我发现自己上网的时间越来越长'],
+ ['i2','我需要越来越多的上网时间才能获得同样的满足感'],
+ ['i3','无法上网时（如断网、手机没电），我会感到烦躁不安'],
+ ['i4','不能上网时，我总惦记着网上的内容，难以专心做其他事'],
+ ['i5','我常常控制不住地打开手机刷个不停'],
+ ['i6','我能很好地控制自己每天上网的时间和场合'],
+ ['i7','我多次尝试减少上网时间，但都以失败告终'],
+ ['i8','上网已经影响到我的学习效率或成绩'],
+ ['i9','因为熬夜上网，我的睡眠或作息受到了影响'],
+ ['i10','上网并没有妨碍我完成学习任务和其他重要安排']
+];
+var FOMO=[
+ ['f1','当我不知道朋友们在{P}上做什么时，我会感到不安，怕错过什么'],
+ ['f2','我担心别人在我不知道的时候有了更多有趣的经历'],
+ ['f3','看到{P}上的新消息提醒，我会忍不住立刻查看'],
+ ['f4','如果有一段时间不能上网了解大家的动态，我会感到与外界脱节'],
+ ['f5','我害怕错过{P}上的重要消息或朋友动态'],
+ ['f6','即使错过大家正在讨论的热点话题，我也觉得无所谓']
+];
+var REV={a5:1,a15:1,i6:1,i10:1,f6:1};
+var NEED=[
+ {k:'service',t:'check',max:3,n:'Q47. 您希望学校提供哪些网络心理健康服务？',ph:'最多选 3 项',o:['网络心理与媒介素养专题讲座','一对一心理咨询（含网络使用困扰主题）','时间管理与自律能力训练团体','正念冥想、放松训练课程','"数字排毒"打卡挑战活动','朋辈互助支持小组','线上心理自助资源推送（科普推文、自测工具）','其他']},
+ {k:'effect',t:'radio',n:'Q48. 总体而言，您认为网络使用对您心理健康的影响是',o:['积极影响为主','消极影响为主','积极与消极兼有','几乎没有影响']},
+ {k:'open1',t:'textarea',req:0,n:'Q49.【选填】您认为网络使用对您心理健康影响最大的一个方面是什么？',ph:'用一两句话简要说明即可，不填不影响提交'},
+ {k:'open2',t:'textarea',req:0,n:'Q50.【选填】您对学校开展网络心理健康服务还有什么建议或期望？',ph:'选填'}
+];
+var SELF=[
+ {k:'self',t:'radio',n:'Q51. 总体而言，您如何评价自己目前的网络使用状况？',o:['非常适度、健康','比较适度','一般，偶尔失控','经常有些失控','明显失控，想改变但很难']},
+ {k:'will',t:'radio',n:'Q52. 填写本问卷后，您是否愿意有意识地反思并调整自己的上网习惯？',o:['愿意，并且打算开始行动','愿意，但不确定能否做到','暂时没有这方面打算']}
+];
+var keyQ={};
+BASIC.concat(BEH,NEED,SELF).forEach(function(q){keyQ[q.k]=q});
+
+var S={};
+var steps=[],si=0;
+
+function P(){var a=S.plat||[];return (a.length&&a[0]!=='其他')?a[0]:'社交平台'}
+function lowUse(){return S.hours==='1小时以内'||(typeof S.freq==='string'&&S.freq.indexOf('几乎不上网')===0)}
+function ix(k){var q=keyQ[k];return q&&q.o?q.o.indexOf(S[k]):-1}
+function activeProbes(){return PROBES.filter(function(p){return p.cond()})}
+var PROBES=[
+ {k:'p1',t:'check',n:'P1. 您睡前这段时间主要在做什么？',o:['刷短视频','即时聊天','追剧、看电影','玩游戏','浏览社交媒体动态','学习、查资料','其他'],
+  cond:function(){return ix('bed')>=2}},
+ {k:'p2',t:'radio',n:'P2. 回想最近一个月，您觉得自己的娱乐性上网时间：',o:['完全在掌控中','基本可控','有些超出计划','明显超出计划'],
+  cond:function(){return ix('funh')>=3}},
+ {k:'p3',t:'radio',n:'P3. 您平均每天刷短视频的总时长约为',o:['30分钟以内','30分钟–1小时','1–2小时','2–3小时','3小时以上'],
+  cond:function(){return (S.acts||[]).indexOf('刷短视频（抖音、快手等）')>-1||(S.plat||[]).indexOf('抖音/快手')>-1}}
+];
+function buildSteps(){
+ steps=['consent','basic','beh'];
+ if(activeProbes().length)steps.push('probes');
+ steps.push('anx');
+ if(!lowUse())steps.push('ia');
+ steps.push('fomo','need','self','res');
+}
+function save(){try{localStorage.setItem(LSK,JSON.stringify(S))}catch(e){}}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.style.opacity=1;clearTimeout(t._h);t._h=setTimeout(function(){t.style.opacity=0},1800)}
+
+function opts(q){
+ if(q.t==='radio')return q.o.map(function(v){return '<label class="opt" data-k="'+q.k+'" data-v="'+v+'"><input type="radio" name="'+q.k+'" value="'+v+'"'+(S[q.k]===v?' checked':'')+'><span class="dot"></span><span>'+v+'</span></label>'}).join('');
+ if(q.t==='check')return q.o.map(function(v){var c=(S[q.k]||[]).indexOf(v)>-1;return '<label class="opt" data-k="'+q.k+'" data-v="'+v+'"><input type="checkbox" name="'+q.k+'" value="'+v+'"'+(c?' checked':'')+'><span class="dot"></span><span>'+v+'</span></label>'}).join('');
+ if(q.t==='rank'){var arr=S[q.k]||[];return q.o.map(function(v){var i=arr.indexOf(v);return '<div class="opt '+(i>-1?'sel':'')+'" data-k="'+q.k+'" data-v="'+v+'"><span class="badge2">'+(i>-1?i+1:'')+'</span><span>'+v+'</span></div>'}).join('')}
+ return '';
+}
+function qHTML(q){
+ var h='<div class="q">'+q.n+(q.max?'<span class="sub">（最多选'+q.max+'项）</span>':'')+'</div>';
+ if(q.ph)h+='<div class="note" style="margin:-2px 0 4px">'+q.ph+'</div>';
+ if(q.t==='textarea')h+='<textarea data-k="'+q.k+'" placeholder="'+(q.ph||'')+'">'+(S[q.k]||'')+'</textarea>';
+ else h+=opts(q);
+ return h;
+}
+function likert(items,startNum){
+ return items.map(function(it,i){
+  var k=it[0],t=it[1].replace(/\{P\}/g,P());
+  var row=LK.map(function(l,j){var sel=S[k]==String(j+1);return '<label class="'+(sel?'sel':'')+'" data-k="'+k+'" data-v="'+(j+1)+'"><input type="radio" name="'+k+'" value="'+(j+1)+'"'+(sel?' checked':'')+'>'+l+'</label>'}).join('');
+  return '<div class="item"><p><span class="inum">'+(startNum+i)+'.</span>'+t+'</p><div class="lk">'+row+'</div></div>';
+ }).join('');
+}
+function scaleHead(txt){
+ return '<div class="intro">请根据<b>最近一个月</b>的实际情况选择最符合您状态的选项：<br>1=完全不符合，2=比较不符合，3=不确定，4=比较符合，5=完全符合。答案无对错之分。</div>'+txt;
+}
+
+function renderStep(keepScroll){
+ var y=window.scrollY;
+ var st=steps[si],h='';
+ if(st==='consent'){
+  h='<div class="card"><h2 style="margin-top:0">指导语与知情同意</h2><div class="intro">'
+  +'<p>亲爱的同学，你好！本调查旨在了解大学生网络使用与心理状况，为学校改进网络心理健康教育提供依据。</p>'
+  +'<p><b>匿名保障</b>：本问卷<b>完全匿名</b>，不收集姓名、学号、手机号等任何可识别身份的信息；'+(SUBMIT_URL?'提交时，您的匿名作答将发送至课题组指定邮箱。':'所有作答与评估均<b>在本机完成，不上传任何数据</b>。')+'</p>'
+  +'<p><b>预计用时</b>：8–12 分钟（共约 50 题）。题目会根据您前面的回答自动定制后续内容。</p>'
+  +'<p><b>自愿参与</b>：可随时关闭页面退出，不会带来任何不利影响。最后一页将为您生成专属的网络心理自评报告（仅供自我参考，不构成临床诊断）。</p></div>'
+  +'<div class="q">Q0. 请确认：<label class="opt" data-k="consent" data-v="1" style="margin-top:8px"><input type="radio" name="consent" value="1"'+(S.consent?' checked':'')+'><span class="dot"></span><span>我已阅读并同意参与，且已年满 18 周岁（或已征得监护人同意）</span></label></div></div>';
+ }else if(st==='basic'){
+  h='<div class="card"><div class="intro">第一部分 · 基本情况。以下固定问题是后续个性化题目的依据，请如实作答。</div>'+BASIC.map(qHTML).join('')+'</div>';
+ }else if(st==='beh'){
+  h='<div class="card"><div class="intro">第二部分 · 网络使用行为'+(P()!=='社交平台'?'（已根据您最常使用的 <b>'+P()+'</b> 定制部分表述）':'')+'</div>'+BEH.map(qHTML).join('')+'</div>';
+ }else if(st==='probes'){
+  h='<div class="card"><div class="intro">个性化追问 · 以下问题由您前面的回答自动生成，仅用于为您定制评估报告。</div>'+activeProbes().map(qHTML).join('')+'</div>';
+ }else if(st==='anx'){
+  h='<div class="card"><div class="dimchip">第三部分 · 网络社交焦虑（第 16–30 题）</div>'+scaleHead(likert(ANX,16))+'</div>';
+ }else if(st==='ia'){
+  h='<div class="card"><div class="dimchip">第三部分 · 网络使用状况（第 31–40 题）</div>'+scaleHead(likert(IAS,31))+'</div>';
+ }else if(st==='fomo'){
+  h='<div class="card"><div class="dimchip">第三部分 · 错失恐惧（第 '+(!lowUse()?'41–46':'31–36 (FoMO)')+' 题）</div>'+scaleHead(likert(FOMO,!lowUse()?41:31))+'</div>';
+ }else if(st==='need'){
+  h='<div class="card"><div class="intro">第四部分 · 主观感受与服务需求（简答题为选填）</div>'+NEED.map(qHTML).join('')+'</div>';
+ }else if(st==='self'){
+  h='<div class="card"><div class="intro">第五部分 · 自我评估：您的回答将纳入最终评估报告。</div>'+SELF.map(qHTML).join('')+'</div>';
+ }else if(st==='res'){h=resultHTML()}
+ document.getElementById('stage').innerHTML=h;
+ var nav=document.getElementById('nav');
+ if(st==='res'){nav.style.display='none'}else{nav.style.display='block'}
+ document.getElementById('bprev').style.display=(si===0)?'none':'block';
+ document.getElementById('bnext').textContent=(st==='self')?'提交并查看评估报告':(st==='consent'?'同意并开始':'下一部分');
+ document.getElementById('pfill').style.width=(si/(steps.length-1)*100)+'%';
+ document.getElementById('ptxt').textContent=(st==='res')?'已完成 · 感谢您的参与':'第 '+(si+1)+' / '+steps.length+' 部分 · 匿名作答，数据仅存本机';
+ if(keepScroll)window.scrollTo(0,y);else window.scrollTo(0,0);
+}
+
+function reqList(st){
+ if(st==='consent')return ['consent'];
+ if(st==='basic')return BASIC.map(function(q){return q.k});
+ if(st==='beh')return BEH.map(function(q){return q.k});
+ if(st==='probes')return activeProbes().map(function(p){return p.k});
+ if(st==='anx')return ANX.map(function(x){return x[0]});
+ if(st==='ia')return IAS.map(function(x){return x[0]});
+ if(st==='fomo')return FOMO.map(function(x){return x[0]});
+ if(st==='need')return ['service','effect'];
+ if(st==='self')return ['self','will'];
+ return [];
+}
+function validate(){
+ var st=steps[si],list=reqList(st),first=null;
+ list.forEach(function(k){
+  var v=S[k],ok=(v!=null&&v!=='')&&(Array.isArray(v)?v.length>0:true);
+  if(!ok){if(!first)first=k;document.querySelectorAll('[data-k="'+k+'"]').forEach(function(el){el.classList.add('miss')})}
+ });
+ if(st==='beh'&&(S.rank||[]).length<3){
+  first=first||'rank';
+  document.querySelectorAll('[data-k="rank"]').forEach(function(el){el.classList.add('miss')});
+  if((S.rank||[]).length>0)toast('请至少排列 3 项活动');else toast('请至少排列 3 项活动');
+ }
+ if(first){
+  toast('本页还有必答题未完成');
+  var el=document.querySelector('[data-k="'+first+'"]');if(el)el.scrollIntoView({block:'center'});
+  return false;
+ }
+ return true;
+}
+function next(){
+ if(!validate())return;
+ if(steps[si]==='basic'||steps[si]==='beh')buildSteps();
+ si++;
+ renderStep();
+ if(steps[si]==='res'){maybeSubmit();toast('评估报告已生成')}
+}
+function prev(){if(si>0){si--;renderStep()}}
+
+var stage=document.getElementById('stage');
+stage.addEventListener('change',function(e){
+ var t=e.target;if(!t.name)return;
+ if(t.type==='radio'){S[t.name]=t.value}
+ else if(t.type==='checkbox'){
+  var q=keyQ[t.name];
+  var arr=[].slice.call(stage.querySelectorAll('input[name="'+t.name+'"]:checked')).map(function(x){return x.value});
+  if(q&&q.max&&arr.length>q.max){t.checked=false;toast('最多选择'+q.max+'项，请先取消其他选项');return}
+  S[t.name]=arr;
+ }
+ syncSel(t.name);save();
+});
+stage.addEventListener('input',function(e){
+ if(e.target.tagName==='TEXTAREA'){S[e.target.getAttribute('data-k')]=e.target.value;save()}
+});
+stage.addEventListener('click',function(e){
+ var r=e.target.closest?e.target.closest('.opt'):null;
+ if(r&&r.getAttribute('data-k')&&keyQ[r.getAttribute('data-k')]&&keyQ[r.getAttribute('data-k')].t==='rank'){
+  var k=r.getAttribute('data-k'),v=r.getAttribute('data-v'),arr=S[k]||[];
+  var i=arr.indexOf(v);if(i>-1)arr.splice(i,1);else arr.push(v);
+  S[k]=arr;save();renderStep(true);return;
+ }
+ if(e.target.id==='btnquit'){
+  document.getElementById('stage').innerHTML='<div class="card"><h2>感谢您的关注</h2><div class="intro">您已选择不参与本次调查。如以后愿意参加，可重新打开本页面。</div></div>';
+  document.getElementById('nav').style.display='none';return;
+ }
+ if(e.target.id==='btncopy'){copyExp();return}
+ if(e.target.id==='btnmanual'){maybeSubmit(true);return}
+ if(e.target.id==='btnlink'){
+  var mv=document.getElementById('admmail').value.trim();
+  if(!mv||mv.indexOf('@')<0){toast('请输入有效邮箱');return}
+  var lk=location.href.split('#')[0].split('?')[0];
+  if(lk.indexOf('file:')===0){toast('当前是本地文件，请先发布到网络地址（见发布说明文档）');return}
+  document.getElementById('admlink').value=lk+'?recv='+encodeURIComponent(mv);
+  toast('已生成，复制后即可发放');return}
+ if(e.target.id==='btncopylink'){var tl=document.getElementById('admlink');tl.select();try{document.execCommand('copy');toast('已复制')}catch(_){toast('请长按文本框复制')}return}
+ if(e.target.id==='btnparse'){adminParse();return}
+ if(e.target.id==='btncsv'){adminCSV();return}
+ if(e.target.id==='btnadminclear'){if(confirm('确定清空本机已入库的作答数据？')){try{localStorage.removeItem(AK)}catch(_){}adminRenderStats();toast('已清空')}return}
+ if(e.target.id==='btnrestart'){
+  if(confirm('确定清空所有作答并重新开始？')){try{localStorage.removeItem(LSK)}catch(_){};location.reload()}
+  return;
+ }
+ if(e.target.id==='btnback'){prev();return}
+});
+function syncSel(k){
+ document.querySelectorAll('[data-k="'+k+'"]').forEach(function(el){
+  el.classList.remove('miss');
+  if(el.tagName==='LABEL'||el.classList.contains('opt')){
+   var v=el.getAttribute('data-v');
+   var sel=Array.isArray(S[k])?S[k].indexOf(v)>-1:String(S[k])===String(v);
+   el.classList.toggle('sel',!!sel);
+  }
+ });
+}
+document.getElementById('bnext').addEventListener('click',next);
+document.getElementById('bprev').addEventListener('click',prev);
+
+function mean(ks){
+ var s=0,n=0;
+ ks.forEach(function(k){var v=S[k];if(v!=null&&v!==''){s+=REV[k]?6-(+v):+v;n++}});
+ return n?s/n:null;
+}
+function lv(m){return m==null?-1:(m>=3.5?2:(m>=3.0?1:0))}
+function lvTxt(l){return ['较低，暂无明显问题','中等偏高，建议留意','偏高，建议重点关注与调节'][l]||'—'}
+function lvCls(l){return ['c-low','c-mid','c-high'][l]||'c-low'}
+
+function resultHTML(){
+ var lu=lowUse();
+ var dE=mean(['a1','a2','a3','a4','a5']),dI=mean(['a6','a7','a8','a9','a10']),dP=mean(['a11','a12','a13','a14','a15']);
+ var sasM=mean(ANX.map(function(x){return x[0]})),fomoM=mean(FOMO.map(function(x){return x[0]}));
+ var iaM=null,fdM=null;
+ if(!lu){iaM=mean(IAS.map(function(x){return x[0]}));fdM=mean(['i8','i9','i10'])}
+ var tier='low';
+ if(!lu&&iaM!=null){
+  if(iaM>=3.5||(iaM>=3.0&&fdM>=3.5))tier='high';
+  else if(iaM>=3.0&&(fomoM>=3.5||sasM>=3.5||ix('self')>=3))tier='mid';
+ }
+ var marks=[];
+ if(ix('bed')>=3)marks.push('睡前使用 ≥1 小时');else if(ix('bed')===2)marks.push('睡前使用 30 分钟–1 小时');
+ if(ix('funh')===4)marks.push('娱乐沉浸性上网 >4 小时/天');
+ if(ix('freq')===3)marks.push('几乎时刻在线');
+ if((S.periods||[]).some(function(x){return x.indexOf('夜间醒来')===0}))marks.push('夜间醒来会刷手机');
+
+ var dims=[{n:'评价恐惧',m:dE},{n:'交往焦虑',m:dI},{n:'隐私担忧',m:dP},{n:'社交焦虑总体',m:sasM}];
+ if(!lu)dims.push({n:'成瘾·耐受性',m:mean(['i1','i2'])},{n:'成瘾·戒断反应',m:mean(['i3','i4'])},{n:'成瘾·强迫性使用',m:mean(['i5','i6','i7'])},{n:'成瘾·功能损害',m:fdM});
+ dims.push({n:'错失恐惧 FoMO',m:fomoM});
+ var bars=dims.filter(function(d){return d.m!=null}).map(function(d){
+  var l=lv(d.m);
+  return '<div class="drow"><div class="t"><span>'+d.n+'</span><span><b>'+d.m.toFixed(2)+'</b> / 5</span></div><div class="sbar"><i class="'+lvCls(l)+'" style="width:'+(d.m/5*100)+'%"></i></div><div class="note">'+lvTxt(l)+'</div></div>';
+ }).join('');
+
+ var badge,interp;
+ if(lu){badge='<span class="badge b-skip">低使用群体 · 成瘾倾向量表本次未施测</span>';
+  interp='您属于低使用群体（日均上网不足 1 小时或几乎不上网），按照问卷逻辑未呈现网络成瘾倾向量表。请参考下方社交焦虑与错失恐惧结果。';}
+ else if(tier==='high'){badge='<span class="badge b-high">较高风险 · 建议尽快自我调节并考虑求助</span>';
+  interp='综合您的成瘾倾向得分（均分 '+iaM.toFixed(2)+'）与功能损害情况，您目前的网络使用可能已在"失控感"和"影响学习/睡眠"方面发出信号。这不代表您"有病"，而是提示值得现在开始调整；如靠自己难以改变，建议预约学校心理咨询中心（通常免费且保密）。';}
+ else if(tier==='mid'){badge='<span class="badge b-mid">存在一定风险 · 建议关注与自我调节</span>';
+  interp='您的网络成瘾倾向均分为 '+iaM.toFixed(2)+'，并伴随错失恐惧、社交焦虑偏高或自评失控等特征，属于需要留意的中等风险区间。建议先从行为层面做小步调整（见下方建议）。';}
+ else{badge='<span class="badge b-low">目前风险较低 · 请保持健康习惯</span>';
+  interp='您的各项心理指标总体处于较低水平，网络使用总体可控。可参考下面的个性化解读，继续保持平衡的使用习惯。';}
+
+ var pf=[];
+ pf.push('您最常使用的平台：'+((S.plat||[]).join('、')||'—')+'；日均上网 '+((S.hours||'—').replace('（含','（含').replace('）','）'))+'。');
+ var ti=ix('toolh'),fi=ix('funh');
+ if(ti>-1&&fi>-1){
+  if(fi>ti)pf.push('娱乐沉浸性使用多于工具性使用，属于<b>沉浸主导型</b>用户——这类模式与成瘾倾向、错失恐惧的关联更强，建议有意识地设置娱乐应用时间上限。');
+  else if(ti>fi)pf.push('工具性使用多于娱乐沉浸性使用，属于<b>工具主导型</b>用户，网络使用结构较为健康。');
+  else pf.push('工具性与娱乐性使用大致均衡。');
+ }
+ if(S.p1)pf.push('您睡前主要在：'+S.p1.join('、')+'。');
+ if(S.p2&&ix('p2')>=2)pf.push('您已意识到娱乐性上网时间"超出计划"——这种觉察正是改变的起点。');
+ if(S.p3)pf.push('您日均刷短视频约 '+S.p3.replace('30分钟–1小时','30分钟到1小时')+'。');
+ if(ix('self')>=3)pf.push('您自评网络使用"经常有些失控"或"明显失控"，与量表结果相互印证。');
+ if(marks.length)pf.push('行为风险标记：'+marks.join('；')+'。');
+
+ var adv=[];
+ if(fomoM!=null&&fomoM>=3.0)adv.push('<b>降低错失恐惧</b>：关闭非必要 App 推送，固定 2–3 个时段集中查看动态；提醒自己"错过的99%都与自己无关"。');
+ if(dE!=null&&dE>=3.5)adv.push('<b>缓解评价恐惧</b>：把点赞和评论看作"反馈"而非"评分"；发布前问自己"我是为记录生活，还是为获得认可"。');
+ if(ix('bed')>=2)adv.push('<b>睡前数字排毒</b>：尝试睡前 30–60 分钟把手机放到床外充电，或开启灰度/勿扰模式，保护睡眠。');
+ if(fi>ti)adv.push('<b>时间管理</b>：用系统"屏幕使用时间"或 App 限额给娱乐类应用设上限；先完成当天要务再娱乐。');
+ if(tier==='high'||tier==='mid')adv.push('<b>寻求支持</b>：学校心理健康教育中心可提供免费、保密的个体咨询（网络使用困扰是常见议题，不必羞于启齿）。');
+ adv.push('<b>日常缓冲</b>：规律运动、线下社交、正念呼吸练习，都有助于降低对线上刺激的依赖。');
+ if((S.service||[]).length)adv.push('您期待的学校服务：'+S.service.join('、')+'（本结果可通过"复制数据"反馈给老师，帮助学校精准开课）。');
+
+ var exp=[];
+ exp.push('大学生网络心理与社交媒体使用状况调查 · 数据导出（本机生成，匿名）');
+ exp.push('导出时间,'+new Date().toLocaleString());
+ exp.push('--- 基本与行为 ---');
+ BASIC.concat(BEH).forEach(function(q){var v=S[q.k];if(v!=null&&v!=='')exp.push(q.n.slice(0,3)+','+(Array.isArray(v)?v.join('|'):v))});
+ activeProbes().forEach(function(p){var v=S[p.k];if(v)exp.push(p.k+','+(Array.isArray(v)?v.join('|'):v))});
+ exp.push('--- 量表原始作答（1-5，反向题 Q20/Q30/Q36/Q40/Q46 请按 6-原始分 转换） ---');
+ ANX.forEach(function(x,i){if(S[x[0]])exp.push('Q'+(16+i)+','+S[x[0]])});
+ if(!lu)IAS.forEach(function(x,i){if(S[x[0]])exp.push('Q'+(31+i)+','+S[x[0]])});
+ else exp.push('Q31-Q40,跳过（低使用逻辑）');
+ FOMO.forEach(function(x,i){if(S[x[0]])exp.push('Q'+(!lowUse()?41+i:31+i)+','+S[x[0]])});
+ exp.push('--- 主观与自评 ---');
+ NEED.concat(SELF).forEach(function(q){var v=S[q.k];if(v)exp.push(q.n.slice(0,3)+','+(Array.isArray(v)?v.join('|'):String(v).replace(/[\n,]/g,' ')))});
+ exp.push('--- 计算得分（反向题已转换） ---');
+ exp.push('评价恐惧均分,'+(dE!=null?dE.toFixed(2):''));
+ exp.push('交往焦虑均分,'+(dI!=null?dI.toFixed(2):''));
+ exp.push('隐私担忧均分,'+(dP!=null?dP.toFixed(2):''));
+ exp.push('社交焦虑总均分,'+(sasM!=null?sasM.toFixed(2):''));
+ exp.push('成瘾倾向总均分,'+(iaM!=null?iaM.toFixed(2):'未施测'));
+ exp.push('功能损害均分,'+(fdM!=null?fdM.toFixed(2):'未施测'));
+ exp.push('FoMO均分,'+(fomoM!=null?fomoM.toFixed(2):''));
+ exp.push('综合风险等级,'+(lu?'不适用（低使用）':(tier==='high'?'较高':tier==='mid'?'中等':'较低')));
+
+ return '<div class="card res">'
+ +'<h2>您的网络心理自评报告</h2>'+badge
+ +'<div class="intro" style="margin-top:6px">'+interp+'</div>'
+ +(marks.length?'<div class="note" style="margin-top:6px">行为标记：'+marks.join('；')+'</div>':'')
+ +'</div>'
+ +'<div class="card res"><h2>各维度得分（1–5 分）</h2>'+bars
+ +'<div class="note">判读参考：&lt;3.0 较低；3.0–3.4 中等偏高（留意）；≥3.5 偏高（重点关注）。本结果为自评参考，不构成临床诊断。</div></div>'
+ +'<div class="card res"><h2>个性化解读</h2><ul class="pts">'+pf.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>'
+ +'<div class="card res"><h2>给您的建议</h2><ul class="pts">'+adv.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'
+ +'<div class="note">如需专业帮助：学校心理健康教育中心（地点/预约方式见学校公众号），咨询免费且保密。</div></div>'
+ +'<div class="card res"><h2>数据导出（用于研究汇总）</h2>'
+ +'<div class="note">如本问卷用于课程研究，可复制以下编码数据发给研究者；数据仅在本页生成，不经过任何服务器。</div>'
+ +'<textarea id="exp" readonly>'+exp.join('\n')+'</textarea>'
+ +(SUBMIT_URL?'<div class="note" id="substat" style="margin-top:8px">'+(S._submitted?'✓ 已提交至研究端':'正在自动提交…若失败可点"手动提交"重试')+'</div>':'')
++'<div class="rbtns">'+(SUBMIT_URL?'<button class="b1" id="btnmanual">手动提交</button>':'')+'<button class="b1" id="btncopy">一键复制数据</button><button class="b2" id="btnback">返回修改</button><button class="b2" id="btnrestart">重新填写</button></div></div>';
+}
+function copyExp(){
+ var ta=document.getElementById('exp');
+ try{
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ta.value).then(function(){toast('已复制到剪贴板')},function(){ta.select();document.execCommand('copy');toast('已复制')})}
+  else{ta.select();document.execCommand('copy');toast('已复制')}
+ }catch(e){ta.select();toast('请长按文本框手动复制')}
+}
+
+/* ===== 数据回收：提交模块 ===== */
+function buildPayload(){
+ var p={};
+ p['提交时间']=new Date().toLocaleString();
+ function add(k,label){var v=S[k];if(v==null||v==='')return;p[label]=Array.isArray(v)?v.join('|'):v}
+ BASIC.concat(BEH,NEED,SELF).forEach(function(q){var mm=/^Q\d+/.exec(q.n);if(mm)add(q.k,mm[0])});
+ PROBES.forEach(function(pr,i){if(pr.cond())add(pr.k,'P'+(i+1))});
+ var lu=lowUse();
+ function f(ks){var x=mean(ks);return x==null?'':x.toFixed(2)}
+ var sas=mean(ANX.map(function(x){return x[0]})),fom=mean(FOMO.map(function(x){return x[0]}));
+ var ias=lu?null:mean(IAS.map(function(x){return x[0]})),fdm=lu?null:mean(['i8','i9','i10']);
+ p['评价恐惧均分']=f(['a1','a2','a3','a4','a5']);
+ p['交往焦虑均分']=f(['a6','a7','a8','a9','a10']);
+ p['隐私担忧均分']=f(['a11','a12','a13','a14','a15']);
+ p['社交焦虑总均分']=sas==null?'':sas.toFixed(2);
+ p['成瘾总均分']=ias==null?'未施测':ias.toFixed(2);
+ p['功能损害均分']=fdm==null?'未施测':fdm.toFixed(2);
+ p['FoMO均分']=fom==null?'':fom.toFixed(2);
+ var tier='较低';
+ if(lu)tier='不适用（低使用）';
+ else if(ias!=null&&(ias>=3.5||(ias>=3.0&&fdm>=3.5)))tier='较高';
+ else if(ias!=null&&ias>=3.0&&(fom>=3.5||sas>=3.5||ix('self')>=3))tier='中等';
+ p['风险等级']=tier;
+ return p;
+}
+function maybeSubmit(force){
+ if(!SUBMIT_URL)return;
+ if(S._submitted&&!force)return;
+ var st=document.getElementById('substat');if(st)st.textContent='正在提交…';
+ fetch(SUBMIT_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(buildPayload())})
+ .then(function(r){return r.json()})
+ .then(function(d){
+  var ok=d&&(d.success===true||d.success==='true');
+  var st2=document.getElementById('substat');
+  if(ok){S._submitted=1;save();if(st2)st2.textContent='✓ 已成功提交，感谢参与';toast('已提交至研究端')}
+  else{if(st2)st2.textContent='提交未确认：首次使用请先在研究邮箱中完成激活，再点"手动提交"重试'}
+ }).catch(function(){var st3=document.getElementById('substat');if(st3)st3.textContent='网络提交失败，可点"手动提交"重试，或用"一键复制数据"'});
+}
+
+/* ===== 研究端面板（网址后加 #admin 打开） ===== */
+var AK='npsy_admin_v1';
+function adminRows(){try{return JSON.parse(localStorage.getItem(AK)||'[]')}catch(e){return[]}}
+function renderAdmin(){
+ document.getElementById('nav').style.display='none';
+ document.getElementById('pfill').style.width='100%';
+ document.getElementById('ptxt').textContent='研究端 · 数据回收面板（仅本机可见）';
+ document.getElementById('stage').innerHTML=
+ '<div class="card"><h2 style="margin:0 0 6px">① 生成发放链接（启用数据回收）</h2>'
+ +'<div class="intro">输入接收作答的邮箱并点击"生成"；把生成的链接发给学生（微信、扫码等均可）。学生提交后，每份匿名作答会以 JSON 邮件自动发到该邮箱。<b>首次</b>收到提交时，FormSubmit 会先发一封激活邮件，点击其中链接一次即长期生效。</div>'
+ +'<div style="display:flex;gap:8px;margin-top:10px"><input id="admmail" placeholder="teacher@xx.edu.cn" style="flex:1;border:1.5px solid #e4e8ee;border-radius:10px;padding:10px;font:inherit;font-size:14px"><button class="b1" style="flex:none;padding:10px 16px" id="btnlink">生成</button></div>'
+ +'<textarea id="admlink" readonly placeholder="生成的发放链接将显示在这里" style="margin-top:8px;min-height:56px"></textarea>'
+ +'<div class="rbtns"><button class="b1" id="btncopylink">复制发放链接</button></div></div>'
+ +'<div class="card"><h2 style="margin:0 0 6px">② 数据入库与汇总</h2>'
+ +'<div class="intro">把邮箱中收到的作答 JSON（可多封一次性）粘贴到下面，点"解析入库"。数据保存在本机浏览器，仅用于汇总统计。</div>'
+ +'<textarea id="admpaste" placeholder="将邮件中的 JSON 作答内容粘贴到这里，支持一次粘贴多份" style="min-height:110px"></textarea>'
+ +'<div class="rbtns"><button class="b1" id="btnparse">解析入库</button><button class="b2" id="btncsv">导出CSV</button><button class="b2" id="btnadminclear">清空本机数据</button></div></div>'
+ +'<div id="admstats"></div>';
+ adminRenderStats();
+}
+function adminParse(){
+ var t=document.getElementById('admpaste').value;
+ var cands=t.match(/\{[\s\S]*?\}/g)||[];
+ var rows=adminRows(),added=0;
+ cands.forEach(function(c){try{var o=JSON.parse(c);if(o&&(o.Q1!=null||o['提交时间'])){rows.push(o);added++}}catch(e){}});
+ localStorage.setItem(AK,JSON.stringify(rows));
+ toast(added?('已入库 '+added+' 份，当前共 '+rows.length+' 份'):'未解析到有效 JSON，请确认粘贴的是邮件中的作答内容');
+ adminRenderStats();
+}
+function csvEsc(v){v=(v==null?'':String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function adminCSV(){
+ var rows=adminRows();if(!rows.length){toast('暂无数据');return}
+ var cols=['提交时间','Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12','Q13','Q14','Q15','P1','P2','P3'];
+ for(var i=16;i<=52;i++)cols.push('Q'+i);
+ cols=cols.concat(['评价恐惧均分','交往焦虑均分','隐私担忧均分','社交焦虑总均分','成瘾总均分','功能损害均分','FoMO均分','风险等级']);
+ var csv='\ufeff'+cols.join(',')+'\n'+rows.map(function(r){return cols.map(function(c){return csvEsc(r[c])}).join(',')}).join('\n');
+ try{
+  var b=new Blob([csv],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='网络心理调查数据.csv';document.body.appendChild(a);a.click();a.remove();
+ }catch(e){var ta=document.getElementById('admpaste');if(ta){ta.value=csv;toast('已填入文本框，请手动全选复制')}}
+}
+function adminRenderStats(){
+ var el=document.getElementById('admstats');if(!el)return;
+ var rows=adminRows();
+ if(!rows.length){el.innerHTML='<div class="card"><div class="intro">暂无入库数据。先用上方链接发放，再把收到的作答邮件 JSON 粘贴到上方"解析入库"。</div></div>';return}
+ function num(r,k){var v=parseFloat(r[k]);return isNaN(v)?null:v}
+ function m(a){a=a.filter(function(x){return x!=null});return a.length?a.reduce(function(s,x){return s+x},0)/a.length:null}
+ function sd(a){var mu=m(a);if(mu==null||a.length<2)return null;return Math.sqrt(a.reduce(function(s,x){return s+(x-mu)*(x-mu)},0)/(a.length-1))}
+ var mets=['评价恐惧均分','交往焦虑均分','隐私担忧均分','社交焦虑总均分','成瘾总均分','功能损害均分','FoMO均分'];
+ var agg=mets.map(function(k){
+  var a=rows.map(function(r){return num(r,k)});
+  var mu=m(a),d=sd(a);
+  return '<div class="drow"><div class="t"><span>'+k+'</span><span><b>'+(mu==null?'—':mu.toFixed(2))+'</b>'+(d!=null?' ± '+d.toFixed(2):'')+'（有效 n='+a.length+'）</span></div><div class="sbar"><i class="c-low" style="width:'+((mu||0)/5*100)+'%"></i></div></div>';
+ }).join('');
+ var tiers=['较高','中等','较低','不适用（低使用）'].map(function(t){
+  var n=rows.filter(function(r){return r['风险等级']===t}).length;
+  return t+' '+n+' 人（'+Math.round(n/rows.length*100)+'%）';
+ }).join('　|　');
+ function grp(gv,mk){var g=rows.filter(function(r){return r.Q1===gv});var mu=m(g.map(function(r){return num(r,mk)}));return g.length+' 人'+(mu!=null?' / 均分 '+mu.toFixed(2):' / 无有效数据')}
+ var th=['提交时间','性别','年级','日均时长','社交焦虑','成瘾','FoMO','风险'].map(function(h){return '<th style="border:1px solid #e4e8ee;padding:5px 6px;text-align:left;background:#f6f8fa">'+h+'</th>'}).join('');
+ var tbl=rows.slice().reverse().map(function(r){
+  return '<tr><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r['提交时间']||'')+'</td><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r.Q1||'')+'</td><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r.Q2||'')+'</td><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r.Q5||'')+'</td><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r['社交焦虑总均分']||'')+'</td><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r['成瘾总均分']||'')+'</td><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r['FoMO均分']||'')+'</td><td style="border:1px solid #e4e8ee;padding:5px 6px">'+csvEsc(r['风险等级']||'')+'</td></tr>';
+ }).join('');
+ el.innerHTML='<div class="card res"><h2>汇总统计（共 '+rows.length+' 份）</h2>'+agg
+ +'<div class="note" style="margin-top:8px">风险分布：'+tiers+'</div>'
+ +'<div class="note" style="margin-top:6px">性别分组：男 — 社交焦虑 '+grp('男','社交焦虑总均分')+'，成瘾 '+grp('男','成瘾总均分')+'，FoMO '+grp('男','FoMO均分')+'；女 — 社交焦虑 '+grp('女','社交焦虑总均分')+'，成瘾 '+grp('女','成瘾总均分')+'，FoMO '+grp('女','FoMO均分')+'</div>'
+ +'</div>'
+ +'<div class="card res"><h2>逐份作答明细</h2><div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12px;min-width:100%">'+ '<tr>'+th+'</tr>'+tbl+'</table></div></div>';
+}
+
+(function(){
+ if(location.hash.indexOf('admin')>-1){renderAdmin();return}
+ try{var sv=localStorage.getItem(LSK);if(sv){S=JSON.parse(sv)||{};if(Object.keys(S).length)setTimeout(function(){toast('已恢复上次作答记录')},400)}}catch(e){}
+ buildSteps();renderStep();
+})();
+</script>
+</body>
+</html>
